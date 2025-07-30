@@ -1,7 +1,8 @@
 import { Box, Drawer, Toolbar, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import { NavLink } from 'react-router-dom';
 
 interface SideBarProps {
   drawerWidth: number;
@@ -30,6 +31,16 @@ const SideBar = ({
     { text: 'Report', path: '/report', icon: SignalCellularAltIcon },
   ]
 
+  const baseLinkStyle: CSSProperties = {
+    textDecoration: 'none',
+    color: 'inherit',
+    display: 'block',
+  }
+
+  const activeLinkStyle:CSSProperties = {
+    backgroundColor: "rgba(0, 0, 0, 0.08)",
+  }
+
   const drawer = (
     <div>
       <Toolbar />
@@ -38,10 +49,18 @@ const SideBar = ({
         {MenuItems.map((item, index) => (
           <ListItem key={index} disablePadding>
             <ListItemButton>
-              <ListItemIcon>
-                {/*index % 2 === 0 ? <InboxIcon /> : <MailIcon />*/}
-                <item.icon />
-              </ListItemIcon>
+              <NavLink key={index} to={item.path} style={({ isActive }) => {
+                return {
+                  ...baseLinkStyle,
+                  ...(isActive ? activeLinkStyle : {}),
+                }
+              }}>
+                <ListItemIcon>
+                  {/*index % 2 === 0 ? <InboxIcon /> : <MailIcon />*/}
+                  <item.icon />
+                </ListItemIcon>
+              </NavLink>
+              
               <ListItemText primary={item.text} />
             </ListItemButton>
           </ListItem>
