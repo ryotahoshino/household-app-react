@@ -14,6 +14,10 @@ import { db } from './firebase';
 
 
 function App() {
+  function isFireStoreError (error: unknown): error is {code: string, message: string } {
+    return typeof error === 'object' && error !== null && 'code' in error && 'message' in error;
+  }
+
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
@@ -28,7 +32,11 @@ function App() {
         });
         setTransactions(transactionData);
       } catch (error) {
-        console.error("Error fetching transactions:", error);
+        if (isFireStoreError(error)) {
+          console.error("Error fetching transactions: ", error.code, error.message);
+        } else {
+          console.error("An unexpected error occurred: ", error);
+        }
       }
     };
     fetchTransactions();
